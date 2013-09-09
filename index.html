@@ -1,9 +1,164 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title></title>
+    <meta charset="utf-8">
+    <title>Swift UI</title>
+    <script src="js/jquery-1.10.2.js"></script>
+    <script src="js/jstree/jquery.jstree.js"></script>
+    <script src="js/bootstrap.js"></script>
+    <script src="http://underscorejs.org/underscore.js"></script>
+    <script src="http://backbonejs.org/backbone.js"></script>
+    <script src="js/application.js"></script>
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="css/bootstrap-theme.css">
+    <link rel="stylesheet" href="css/application.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
 
+<div id="wrap">
+    <nav class="navbar navbar-default" role="navigation">
+        <div class="container">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">Swift UI</a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse navbar-ex1-collapse">
+                <ul class="nav navbar-nav">
+                    <li class="active"><a href="#" title="Browse containers, folders, and objects"><i
+                            class="glyphicon glyphicon-home"></i> Browser</a></li>
+                    <li><a href="#" title="Manage Accounts"><span class="glyphicon glyphicon-list"></span> Accounts</a>
+                    </li>
+                    <li><a href="#" title="Manage Users"><span class="glyphicon glyphicon-user"></span> Users</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <button type="button" class="btn btn-default navbar-btn">Sign in</button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="well well-sm">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Account 1</h3>
+                    </div>
+                    <div id="nav-tree">
+                        <ul>
+                            <li><a href="#"><i class="glyphicon glyphicon-hdd"></i> Container 1</a>
+                                <ul>
+                                    <li><a href="#"><i class="glyphicon glyphicon-folder-open"></i> Folder 1</a>
+                                        <ul>
+                                            <li><a href="#"><i class="glyphicon glyphicon-file"></i> Object A</a></li>
+                                            <li><a href="#"><i class="glyphicon glyphicon-file"></i> Object B</a></li>
+                                            <li><a href="#"><i class="glyphicon glyphicon-file"></i> Object C</a></li>
+                                        </ul>
+                                    </li>
+                                    <li><a href="#"><i class="glyphicon glyphicon-folder-open"></i> Folder 2</a>
+                                        <ul>
+                                            <li><a href="#"><i class="glyphicon glyphicon-file"></i> Object D</a></li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li><a href="#"><i class="glyphicon glyphicon-hdd"></i> Container 2</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-9">
+                <ol class="breadcrumb">
+                    <li>Account 1</li>
+                    <li><a href="#">Container 1</a></li>
+                    <li><a href="#">Folder 2 </a></li>
+                    <li class="active">Object D</li>
+                </ol>
+                <div class="page-header">
+                    <h1>Object D
+                        <small title="a8b6746fdfda8b6746a8b6746fd">a8b6746fd</small>
+                        <div class="btn-toolbar pull-right">
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-default" data-loading-text="Loading..."
+                                        title="Download Object">
+                                    <span class="glyphicon glyphicon-download-alt"></span>
+                                </button>
+                                <button type="button" class="btn btn-default" title="Delete Object">
+                                    <span class="glyphicon glyphicon-trash"></span>
+                                </button>
+                                <button type="button" class="btn btn-default" title="Upload New Object">
+                                    <span class="glyphicon glyphicon-cloud-upload"></span>
+                                </button>
+                            </div>
+                        </div>
+                    </h1>
+                </div>
+                <table class="table table-hover table-striped">
+                    <tbody>
+                    <tr>
+                        <th>Content-Length</th>
+                        <td>512000</td>
+                    </tr>
+                    <tr>
+                        <th>Content-Type</th>
+                        <td>text/plain; charset=UTF-8</td>
+                    </tr>
+                    <tr>
+                        <th>Meat</th>
+                        <td>Bacon</td>
+                    </tr>
+                    <tr>
+                        <th>Fruit</th>
+                        <td>Bacon</td>
+                    </tr>
+                    <tr>
+                        <th>Veggie</th>
+                        <td>Bacon</td>
+                    </tr>
+                    <tr>
+                        <th>Dairy</th>
+                        <td>Bacon</td>
+                    </tr>
+                    </tbody>
+                </table>
+                <a data-toggle="modal" href="#myModal" class="btn btn-primary btn-lg">Launch demo modal</a>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Modal title</h4>
+            </div>
+            <div class="modal-body">
+                ...
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
 </body>
 </html>
