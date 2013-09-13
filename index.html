@@ -3,11 +3,12 @@
 <head>
     <meta charset="utf-8">
     <title>Swift UI</title>
-    <script src="js/libs/jquery-1.10.2.js"></script>
+    <script data-main="js/main" src="js/libs/require.js"></script>
+    <!--<script src="js/libs/jquery.js"></script>
     <script src="js/libs/jstree/jquery.jstree.js"></script>
     <script src="js/libs/bootstrap.js"></script>
     <script src="http://underscorejs.org/underscore.js"></script>
-    <script src="http://backbonejs.org/backbone.js"></script>
+    <script src="http://backbonejs.org/backbone.js"></script>-->
     <script src="js/config.js"></script>
     <link rel="stylesheet" href="css/bootstrap.css">
     <link rel="stylesheet" href="css/bootstrap-theme.css">
@@ -41,7 +42,7 @@
                     <li><a href="#" title="Manage Users"><span class="glyphicon glyphicon-user"></span> Users</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
-                    <li>
+                    <li id="login-entry">
                         <button type="button" class="btn btn-default navbar-btn">Sign in</button>
                     </li>
                 </ul>
@@ -52,9 +53,11 @@
     <div class="container">
         <div class="row">
             <div id="content"></div>
-            <ul id="accounts"></ul>
+            <ul id="containers"></ul>
             <script type="text/template" id="account-template">
-                <li><%= name %></li>
+                <% _.each(containers, function(container) { %>
+                <li><%= container.get('name') %></li>
+                <% }); %>
             </script>
         </div>
     </div>
@@ -174,7 +177,7 @@
     <!-- /.modal-dialog -->
 </div>
 <!-- /.modal -->
-<script src="js/login.js"></script>
-<script src="js/app.js"></script>
+<!--<script src="js/views/LoginView.js"></script>
+<script src="js/app.js"></script>-->
 </body>
 </html>

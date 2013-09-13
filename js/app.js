@@ -1,61 +1,79 @@
 // Filename: app.js
-$(function () {
-    //$('#nav-tree').jstree({
-    //    "plugins": [ "html_data", "themes"],
-    //    "themes": {
-    //        "icons": false
-    //    }
-    //});
+//$(function () {
+//$('#nav-tree').jstree({
+//    "plugins": [ "html_data", "themes"],
+//    "themes": {
+//        "icons": false
+//    }
+//});
+//});
+
+define([
+    'jquery',
+    'underscore',
+    'backbone',
+    'views/ContainerList',
+    'views/LoginView'
+], function ($, _, Backbone, ContainerList, LoginView) {
+
+    /*var MainRouter = Backbone.Router.extend({
+     routes: {
+     '*actions': 'defaultAction',
+     'messages': 'showMessageAboutMongo', // All urls will trigger this route
+     'about': 'showAbout'
+     }
+     });*/
+
+    var initialize = function () {
+
+        //var vent = _.extend({}, Backbone.Events);
+        //var router = new MainRouter();
+
+        $(document).ajaxSend(function (e, xhr, options) {
+            xhr.setRequestHeader("X-Auth-Token", appConfig.auth.token);
+        });
+
+        var loginView = new LoginView();
+        loginView.render();
+
+        $('#loginButton').click();
+
+        console.log("App / initialize");
+
+        /*
+         router.on('route:defaultAction', function (actions) {
+
+         var mainView = new MainView();
+         mainView.render();
+
+         var cabinView = new CabinView();
+         cabinView.render();
+
+         console.log("default route");
+
+         });
+
+         router.on('route:showMessageAboutMongo', function () {
+
+         console.log("display helpful message about setting up mongo");
+
+         });
+
+         router.on('route:showAbout', function () {
+
+         console.log("display about");
+
+         });
+
+         Backbone.history.start();
+         */
+
+    };
+    return {
+        initialize: initialize
+    };
 });
 
-
-window.Container = Backbone.Model.extend({
-    initialize: function () {
-        console.log('Container model has been initialized.');
-        this.objects = new SwiftObjectCollection;
-        this.objects.url = appConfig.auth.storageurl + '/' + this.get('name');
-        //this.objects.on("reset", this.updateCounts)
-    }
-});
-
-window.ContainerCollection = Backbone.Collection.extend({
-    model: Container,
-    url: function () {
-        return this.instanceUrl;
-    },
-    initialize: function (props) {
-        this.instanceUrl = props.url;
-        this.fetch();
-    }
-});
-
-window.SwiftObject = Backbone.Model.extend({
-    initialize: function () {
-        console.log('Object model has been initialized.');
-    }
-});
-
-window.SwiftObjectCollection = Backbone.Collection.extend({
-    model: SwiftObject
-});
-
-window.ContainerView = Backbone.View.extend({
-    tagName: 'li',
-    template: _.template($('#container-template').html()),
-    initialize: function () {
-        this.$el = $('#containers');
-        //this.listenTo(this.model, "change", this.render);
-    },
-    render: function () {
-        this.$el.html(this.template(this.model.toJSON()));
-        return this;
-    }
-});
-
-
-$(document).ajaxSend(function (e, xhr, options) {
-    xhr.setRequestHeader("X-Auth-Token", appConfig.auth.token);
-});
 
 //c  = new ContainerCollection({url: appConfig.auth.storageurl})
 //var containerView = new ContainerView(c);
@@ -75,6 +93,3 @@ $(document).ajaxSend(function (e, xhr, options) {
 //});
 
 
-$('#content').html(new LoginView().render().el);
-
-$('#loginButton').click();
