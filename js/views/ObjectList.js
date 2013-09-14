@@ -5,7 +5,7 @@ define([
     'models/object'
 ], function ($, _, Backbone, ObjectModel) {
     var ObjectList = Backbone.View.extend({
-        el: '.guestbook-form-container',
+        el: '.swcontainer',
         render: function () {
             $(this.el).html(guestbookFormTemplate);
         },
