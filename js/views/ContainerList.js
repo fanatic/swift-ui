@@ -2,17 +2,13 @@ define([
     'jquery',
     'underscore',
     'backbone',
-    'collections/containers',
-    'models/container'
-], function ($, _, Backbone, ContainerCollection, ContainerModel) {
+    'collections/containers'
+], function ($, _, Backbone, ContainerCollection) {
     var ContainerList = Backbone.View.extend({
         el: '#containers',
-        tagName: 'li',
-        template: _.template($('#container-template').html()),
-        model: ContainerModel,
+        template: _.template($('#containers-template').html()),
         initialize: function () {
             console.log('Initializing ContainerList view.');
-            //this.$el = $('#containers');
             //this.listenTo(this.model, "change", this.render);
         },
         render: function () {
@@ -20,11 +16,13 @@ define([
             var containers = new ContainerCollection();
             containers.fetch({
                 success: function (containers) {
-                    $(that.el).html(that.template(this.toJSON()));
+                    $(that.el).html(that.template({containers: containers.models, _: _}));
+                },
+                error: function (response) {
+                    console.log(response, "ContainerList error!");
                 }
             });
-            //this.$el.html(this.template(this.model.toJSON()));
-            //return this;
+            return this;
         }
     });
 

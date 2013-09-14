@@ -53,12 +53,6 @@
     <div class="container">
         <div class="row">
             <div id="content"></div>
-            <ul id="containers"></ul>
-            <script type="text/template" id="account-template">
-                <% _.each(containers, function(container) { %>
-                <li><%= container.get('name') %></li>
-                <% }); %>
-            </script>
         </div>
     </div>
 
@@ -70,10 +64,13 @@
                         <h3 class="panel-title">Account 1</h3>
                     </div>
                     <div id="nav-tree">
+                        <script type="text/template" id="containers-template">
+                            <% _.each(containers, function(con) { %>
+                            <li><a class="swcontainer" href="#"><i class="glyphicon glyphicon-hdd"></i> <%=
+                                con.get('name') %></a></li>
+                            <% }); %>
+                        </script>
                         <ul id="containers">
-                            <script type="text/template" id="container-template">
-                                <li><a href="#"><i class="glyphicon glyphicon-hdd"></i> <%= name %></a></li>
-                            </script>
                             <li><a href="#"><i class="glyphicon glyphicon-hdd"></i> Container 1</a>
                                 <ul>
                                     <li><a href="#"><i class="glyphicon glyphicon-folder-open"></i> Folder 1</a>

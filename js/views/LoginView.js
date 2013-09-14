@@ -4,8 +4,8 @@ define([
     'jquery',
     'underscore',
     'backbone',
-    'models/container'
-], function ($, _, Backbone, ContainerModel) {
+    'views/ContainerList'
+], function ($, _, Backbone, ContainerList) {
     var LoginView = Backbone.View.extend({
         el: '#login-entry',
         initialize: function () {
@@ -45,9 +45,13 @@ define([
                     if (data.error) {  // If there is an error, show the error messages
                         $('.alert-error').text(data.error.text).show();
                     }
-                    else { // If not, send them back to the home page
-                        window.location.replace('#');
-                    }
+
+                    var containerList = new ContainerList();
+                    containerList.render();
+
+                    //else { // If not, send them back to the home page
+                    //   window.location.replace('#');
+                    // }
                 }
             });
         }
