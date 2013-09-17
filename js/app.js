@@ -12,9 +12,10 @@ define([
     'jquery',
     'underscore',
     'backbone',
-    'views/ContainerList',
-    'views/LoginView'
-], function ($, _, Backbone, ContainerList, LoginView) {
+    'bootstrap',
+    'views/LoginView',
+    'views/ContainerRoot'
+], function ($, _, Backbone, Bootstrap, LoginView, ContainerRoot) {
 
     /*var MainRouter = Backbone.Router.extend({
      routes: {
@@ -25,20 +26,22 @@ define([
      });*/
 
     var initialize = function () {
-
-        //var vent = _.extend({}, Backbone.Events);
+        Backbone.pubSub = _.extend({}, Backbone.Events);
         //var router = new MainRouter();
 
         $(document).ajaxSend(function (e, xhr, options) {
             xhr.setRequestHeader("X-Auth-Token", appConfig.auth.token);
         });
 
+        var containerRoot = new ContainerRoot();
+        $("#nav-tree").html(containerRoot.el);
         var loginView = new LoginView();
         loginView.render();
 
         $('#loginButton').click();
 
         console.log("App / initialize");
+
 
         /*
          router.on('route:defaultAction', function (actions) {

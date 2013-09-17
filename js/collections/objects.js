@@ -2,10 +2,16 @@ define([
     'jquery',
     'underscore',
     'backbone',
-    'models/message'
-], function ($, _, Backbone, MessageModel) {
+    'models/object'
+], function ($, _, Backbone, SwiftObject) {
     var SwiftObjects = Backbone.Collection.extend({
-        model: SwiftObject
+        model: SwiftObject,
+        url: function () {
+            return this.container.url();
+        },
+        initialize: function () {
+            console.log('Object collection has been initialized.');
+        }
     });
 
     return SwiftObjects;

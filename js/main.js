@@ -3,10 +3,12 @@
 require.config({
     paths: {
         // Major libraries
-        bootstrap: 'libs/bootstrap',
         jquery: 'libs/jquery',
+        bootstrap: 'libs/bootstrap',
         underscore: 'libs/underscore', // https://github.com/amdjs
-        backbone: 'libs/backbone' // https://github.com/amdjs
+        backbone: 'libs/backbone', // https://github.com/amdjs
+        backboneRelational: 'libs/backbone-relational',
+        marionette: 'libs/backbone-marionette'
 
         // Require.js plugins
         //text: 'libs/require/text',
@@ -15,13 +17,18 @@ require.config({
         // When you have HTML/CSS designers this aids in keeping them out of the js directory
         //templates: '../templates'
     },
-    urlArgs: "bust=" + (new Date()).getTime()
+    urlArgs: "bust=" + (new Date()).getTime(),
+    shim: {
+        'bootstrap': {
+            deps: ['jquery']
+        }
+    }
 });
 
 // Let's kick off the application
 
 require([
-    'app', 'bootstrap'
+    'app'
 ], function (App) {
     App.initialize();
 });

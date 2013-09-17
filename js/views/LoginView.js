@@ -4,8 +4,9 @@ define([
     'jquery',
     'underscore',
     'backbone',
-    'views/ContainerList'
-], function ($, _, Backbone, ContainerList) {
+    'views/ContainerList',
+    'collections/containers'
+], function ($, _, Backbone, ContainerList, ContainerCollection) {
     var LoginView = Backbone.View.extend({
         el: '#login-entry',
         initialize: function () {
@@ -42,16 +43,11 @@ define([
                     console.log(appConfig.auth.token);
                     console.log(appConfig.auth.storageurl);
 
-                    if (data.error) {  // If there is an error, show the error messages
-                        $('.alert-error').text(data.error.text).show();
-                    }
-
-                    var containerList = new ContainerList();
-                    containerList.render();
-
-                    //else { // If not, send them back to the home page
-                    //   window.location.replace('#');
-                    // }
+                    //if (data.error) {  // If there is an error, show the error messages
+                    //    $('.alert-error').text(data.error.text).show();
+                    //} else {
+                    Backbone.pubSub.trigger('login-successful', appConfig.auth.storageurl);
+                    //}
                 }
             });
         }
