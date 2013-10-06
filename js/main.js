@@ -4,22 +4,18 @@ require.config({
     paths: {
         // Major libraries
         jquery: 'libs/jquery',
+        jstree: 'libs/jstree/jquery.jstree',
         bootstrap: 'libs/bootstrap',
         underscore: 'libs/underscore', // https://github.com/amdjs
         backbone: 'libs/backbone', // https://github.com/amdjs
-        backboneRelational: 'libs/backbone-relational',
-        marionette: 'libs/backbone-marionette'
-
-        // Require.js plugins
-        //text: 'libs/require/text',
-
-        // Just a short cut so we can put our html outside the js dir
-        // When you have HTML/CSS designers this aids in keeping them out of the js directory
-        //templates: '../templates'
+        text: 'libs/require/text'
     },
     urlArgs: "bust=" + (new Date()).getTime(),
     shim: {
         'bootstrap': {
+            deps: ['jquery']
+        },
+        'jstree': {
             deps: ['jquery']
         }
     }

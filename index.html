@@ -38,7 +38,6 @@
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     <li id="login-entry">
-                        <button type="button" class="btn btn-default navbar-btn">Sign in</button>
                     </li>
                 </ul>
             </div>
@@ -47,107 +46,11 @@
 
     <div class="container">
         <div class="row">
-            <div id="content"></div>
-        </div>
-    </div>
-
-    <div class="container">
-        <div class="row">
-            <div class="col-md-3">
-                <div class="well well-sm">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">Account 1</h3>
-                    </div>
-                    <script type="text/template" id="containers-template">
-                        <ul id="containers"></ul>
-                    </script>
-                    <script type="text/template" id="container-template">
-                        <a class="swcontainer" href="#"><i class="glyphicon glyphicon-<%= icon_class %>"></i> <%= name
-                            %></a>
-                        <ul></ul>
-                    </script>
-                    <div id="nav-tree">
-                        <ul id="containers2">
-                            <li><a href="#"><i class="glyphicon glyphicon-hdd"></i> Container 1</a>
-                                <ul>
-                                    <li><a href="#"><i class="glyphicon glyphicon-folder-open"></i> Folder 1</a>
-                                        <ul>
-                                            <li><a href="#"><i class="glyphicon glyphicon-file"></i> Object A</a></li>
-                                            <li><a href="#"><i class="glyphicon glyphicon-file"></i> Object B</a></li>
-                                            <li><a href="#"><i class="glyphicon glyphicon-file"></i> Object C</a></li>
-                                        </ul>
-                                    </li>
-                                    <li><a href="#"><i class="glyphicon glyphicon-folder-open"></i> Folder 2</a>
-                                        <ul>
-                                            <li><a href="#"><i class="glyphicon glyphicon-file"></i> Object D</a></li>
-                                        </ul>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li><a href="#"><i class="glyphicon glyphicon-hdd"></i> Container 2</a></li>
-                        </ul>
-                    </div>
-                </div>
+            <div id="browser-tree" class="col-md-3">
             </div>
-            <div class="col-md-9">
-                <ol class="breadcrumb">
-                    <li>Account 1</li>
-                    <li><a href="#">Container 1</a></li>
-                    <li><a href="#">Folder 2 </a></li>
-                    <li class="active">Object D</li>
-                </ol>
-                <div class="page-header">
-                    <h1>Object D
-                        <small title="a8b6746fdfda8b6746a8b6746fd">a8b6746fd</small>
-                        <div class="btn-toolbar pull-right">
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-default" data-loading-text="Loading..."
-                                        title="Download Object">
-                                    <span class="glyphicon glyphicon-download-alt"></span>
-                                </button>
-                                <button type="button" class="btn btn-default" title="Delete Object">
-                                    <span class="glyphicon glyphicon-trash"></span>
-                                </button>
-                                <button type="button" class="btn btn-default" title="Upload New Object">
-                                    <span class="glyphicon glyphicon-cloud-upload"></span>
-                                </button>
-                            </div>
-                        </div>
-                    </h1>
-                </div>
-                <table class="table table-hover table-striped">
-                    <tbody>
-                    <tr>
-                        <th>Content-Length</th>
-                        <td>512000</td>
-                    </tr>
-                    <tr>
-                        <th>Content-Type</th>
-                        <td>text/plain; charset=UTF-8</td>
-                    </tr>
-                    <tr>
-                        <th>Meat</th>
-                        <td>Bacon</td>
-                    </tr>
-                    <tr>
-                        <th>Fruit</th>
-                        <td>Bacon</td>
-                    </tr>
-                    <tr>
-                        <th>Veggie</th>
-                        <td>Bacon</td>
-                    </tr>
-                    <tr>
-                        <th>Dairy</th>
-                        <td>Bacon</td>
-                    </tr>
-                    </tbody>
-                </table>
-                <a data-toggle="modal" href="#myModal" class="btn btn-primary btn-lg">Launch demo modal</a>
+            <div id="content" class="col-md-9">
             </div>
         </div>
-
-
     </div>
 </div>
 <!-- Modal -->

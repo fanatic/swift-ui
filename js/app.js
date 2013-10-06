@@ -1,98 +1,99 @@
 // Filename: app.js
-//$(function () {
-//$('#nav-tree').jstree({
-//    "plugins": [ "html_data", "themes"],
-//    "themes": {
-//        "icons": false
-//    }
-//});
-//});
-
 define([
     'jquery',
+    'jstree',
     'underscore',
     'backbone',
     'bootstrap',
     'views/LoginView',
-    'views/ContainerRoot'
-], function ($, _, Backbone, Bootstrap, LoginView, ContainerRoot) {
+    'views/BrowserTreeView'
+], function ($, jstree, _, Backbone, Bootstrap, LoginView, BrowserTreeView) {
 
-    /*var MainRouter = Backbone.Router.extend({
-     routes: {
-     '*actions': 'defaultAction',
-     'messages': 'showMessageAboutMongo', // All urls will trigger this route
-     'about': 'showAbout'
-     }
-     });*/
+    var MainRouter = Backbone.Router.extend({
+        routes: {
+            'browser': 'browser',
+            'accounts': 'accounts',
+            'users': 'accounts',
+            '*actions': 'main'
+        }
+    });
 
     var initialize = function () {
-        Backbone.pubSub = _.extend({}, Backbone.Events);
-        //var router = new MainRouter();
+        var router = new MainRouter();
+
+        $.ajaxSetup({
+            statusCode: {
+                401: function () {
+                    // Redirect to the login page.
+                    router.navigate("browser", true)
+                },
+                403: function () {
+                    // 403 -- Access denied
+                    router.navigate("browser#denied", true)
+                }
+            }
+        });
 
         $(document).ajaxSend(function (e, xhr, options) {
             xhr.setRequestHeader("X-Auth-Token", appConfig.auth.token);
         });
 
-        var containerRoot = new ContainerRoot();
-        $("#nav-tree").html(containerRoot.el);
-        var loginView = new LoginView();
-        loginView.render();
+        /*loadConfig(function () {
+         loadCommandLine();
+         setupResizeEvents();
+         setupCommandLock();
+         setupCLIKeyEvents();
+         $('.container').removeClass('container');
+         $('html').css('overflow-y', 'hidden');
+         $('#pageIndex').live('keydown', function (e) {
+         if (e.keyCode == 13) {
+         $('#gotoIndexButton').click();
+         }
+         });
+         $('#redisCommandsModal').modal({
+         backdrop: false,
+         keyboard: false,
+         show: false
+         });
+         });*/
 
-        $('#loginButton').click();
+        /* window.Vent = {};
+         _.extend(window.Vent, Backbone.Events);
+         window.Vent.on('login-successful', this.redirect_to_browser, this);
+         function redirect_to_browser(obj) {
+         router.navigate('browser', true);
+         } */
 
         console.log("App / initialize");
 
+        router.on('route:main', function (actions) {
+            console.log("Loading Login");
+            if (!appConfig.auth.token) {
+                var loginView = new LoginView();
+                loginView.render();
 
-        /*
-         router.on('route:defaultAction', function (actions) {
+                //TODO: Stop clicking automatically
+                $('#loginButton').click();
+            }
+        });
 
-         var mainView = new MainView();
-         mainView.render();
+        router.on('route:browser', function (actions) {
+            console.log("Loading Browser");
+            if (!appConfig.auth.token) {
+                var loginView = new LoginView();
+                loginView.render();
+                //TODO: Stop clicking automatically
+                $('#loginButton').click();
+            }
 
-         var cabinView = new CabinView();
-         cabinView.render();
+            var browserTreeView = new BrowserTreeView();
+            browserTreeView.render();
+        });
 
-         console.log("default route");
-
-         });
-
-         router.on('route:showMessageAboutMongo', function () {
-
-         console.log("display helpful message about setting up mongo");
-
-         });
-
-         router.on('route:showAbout', function () {
-
-         console.log("display about");
-
-         });
-
-         Backbone.history.start();
-         */
-
+        Backbone.history.start();
     };
     return {
         initialize: initialize
     };
+
 });
-
-
-//c  = new ContainerCollection({url: appConfig.auth.storageurl})
-//var containerView = new ContainerView(c);
-
-//$.ajaxSetup({
-//    statusCode: {
-//        401: function(){
-//            // Redirec the to the login page.
-//            window.location.replace('/#login');
-//
-//        },
-//        403: function() {
-//            // 403 -- Access denied
-//            window.location.replace('/#denied');
-//        }
-//    }
-//});
-
-

@@ -4,9 +4,8 @@ define([
     'jquery',
     'underscore',
     'backbone',
-    'views/ContainerList',
-    'collections/containers'
-], function ($, _, Backbone, ContainerList, ContainerCollection) {
+    'text!templates/login.html'
+], function ($, _, Backbone, loginTemplate) {
     var LoginView = Backbone.View.extend({
         el: '#login-entry',
         initialize: function () {
@@ -19,7 +18,7 @@ define([
 
         render: function () {
             //TODO: Remember to add error handling div
-            $(this.el).html('<button id="loginButton" type="button" class="btn btn-default navbar-btn">Sign in</button>');
+            $(this.el).html(_.template(loginTemplate));
             return this;
         },
 
@@ -39,15 +38,11 @@ define([
                 complete: function (data) {
                     console.log(["Login request details: ", data]);
                     appConfig.auth.token = data.getResponseHeader('X-Storage-Token');
-                    appConfig.auth.storageurl = data.getResponseHeader('X-Storage-Url')
+                    appConfig.auth.storageurl = data.getResponseHeader('X-Storage-Url');
                     console.log(appConfig.auth.token);
                     console.log(appConfig.auth.storageurl);
-
-                    //if (data.error) {  // If there is an error, show the error messages
-                    //    $('.alert-error').text(data.error.text).show();
-                    //} else {
-                    Backbone.pubSub.trigger('login-successful', appConfig.auth.storageurl);
-                    //}
+                    //window.Vent.trigger('login-successful', appConfig.auth.storageurl);
+                    window.location.href = "#browser";
                 }
             });
         }
