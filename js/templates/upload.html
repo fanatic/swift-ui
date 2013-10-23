@@ -1,0 +1,58 @@
+<style type="text/css">
+    #progress_bar {
+      width: 200px;
+      margin: 10px 0;
+      padding: 3px;
+      border: 1px solid #000;
+      font-size: 14px;
+      clear: both;
+      opacity: 0;
+      -moz-transition: opacity 1s linear;
+      -o-transition: opacity 1s linear;
+      -webkit-transition: opacity 1s linear;
+    }
+    #progress_bar.loading {
+      opacity: 1.0;
+    }
+    #progress_bar .percent {
+      background-color: #99ccff;
+      height: auto;
+      width: 0;
+    }
+</style>
+
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title">Upload Object</h4>
+        </div>
+        <div class="modal-body">
+            <table class="table table-hover table-striped">
+                <tbody>
+                <tr>
+                    <th>Container:</th>
+                    <td><%- container %></td>
+                </tr>
+                <tr>
+                    <th>File selection:</th>
+                    <td><input type="file" id="files" name="files[]" multiple /></td>
+                </tr>
+                <tr>
+                    <th>Progress:</th>
+                    <td><div id="progress_bar"><div class="percent">0%</div></div></td>
+                </tr>
+                <tr>
+                    <th>Status:</th>
+                    <td><span id="status"></span></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+    </div>
+    <!-- /.modal-content -->
+</div>
+<!-- /.modal-dialog -->

@@ -12,14 +12,14 @@
         <% } %>
         <div class="btn-toolbar pull-right">
             <div class="btn-group">
-                <button type="button" class="btn btn-default" data-loading-text="Loading..."
+                <button type="button" class="btn btn-default download" data-loading-text="Loading..."
                         title="Download Object">
                     <span class="glyphicon glyphicon-download-alt"></span>
                 </button>
-                <button type="button" class="btn btn-default" title="Delete Object">
+                <button type="button" class="btn btn-default destroy" title="Delete Object">
                     <span class="glyphicon glyphicon-trash"></span>
                 </button>
-                <button type="button" class="btn btn-default" title="Upload New Object">
+                <button type="button" class="btn btn-default upload" title="Upload New Object">
                     <span class="glyphicon glyphicon-cloud-upload"></span>
                 </button>
             </div>
@@ -39,4 +39,5 @@
     <% } %>
     </tbody>
 </table>
-<a data-toggle="modal" href="#myModal" class="btn btn-primary btn-lg">Launch demo modal</a>
+
+<div class="modal fade" id="upload-modal" tabindex="-1" role="dialog" aria-labelledby="upload-modal" aria-hidden="true"></div>
