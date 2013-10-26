@@ -16,6 +16,9 @@
                         title="Download Object">
                     <span class="glyphicon glyphicon-download-alt"></span>
                 </button>
+                <button type="button" class="btn btn-default edit" title="Edit Object Metadata">
+                    <span class="glyphicon glyphicon-edit"></span>
+                </button>
                 <button type="button" class="btn btn-default destroy" title="Delete Object">
                     <span class="glyphicon glyphicon-trash"></span>
                 </button>
@@ -26,17 +29,15 @@
         </div>
     </h1>
 </div>
-<table class="table table-hover table-striped">
+<table class="table table-hover table-striped table-metadata">
     <tbody>
-    <% for (var i=0, len=_.keys(metadata).length; i
-    <len
-    ; ++i) { %>
-    <% if(_.keys(metadata)[i] == "Etag") { continue; } %>
+    <% _.each(_.keys(metadata).sort(), function(element, index, list) { %>
+    <% if(element == "Etag") { return false; } %>
     <tr>
-        <th><%- _.keys(metadata)[i] %></th>
-        <td><%- metadata[_.keys(metadata)[i]] %></td>
+        <th><%- element %></th>
+        <td id="<%- element %>" class="metadata"><%- metadata[element] %></td>
     </tr>
-    <% } %>
+    <% }); %>
     </tbody>
 </table>
 

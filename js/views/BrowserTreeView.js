@@ -16,179 +16,185 @@ define([
 
         render: function () {
             $(this.el).html(_.template(browserTreeTemplate));
-            loadTree();
+            this.loadTree();
             return this;
-        }
-    });
-    return BrowserTree;
+        },
 
-    //var CmdParser = require('cmdparser');
-    function loadTree() {
-        $.get(appConfig.auth.storageurl, function (isConnected) {
-            if (isConnected) {
-                $('#nav-tree').bind("loaded.jstree", function () {
-                    var tree = getObjectTree();
-                    if (tree) {
-                        var root = tree._get_children(-1)[0];
-                        tree.open_node(root, null, true);
-                    }
-                });
-                getContainerInfo(function (data) {
-                    var json_dataData = [];
-
-                    data.forEach(function (container, index) {
-                        var count = container.count;
-                        var bytes = container.bytes;
-                        var name = container.name;
-                        json_dataData.push({
-                            data: name,
-                            state: "closed",
-                            attr: {
-                                id: name,
-                                rel: "root"
-                            }
-                        });
-                        if (index === data.length - 1) {
-                            return onJSONDataComplete();
+        loadTree: function () {
+            var that = this;
+            $.get(appConfig.auth.storageurl, function (isConnected) {
+                if (isConnected) {
+                    $('#nav-tree').bind("loaded.jstree", function () {
+                        var tree = getObjectTree();
+                        if (tree) {
+                            var root = tree._get_children(-1)[0];
+                            tree.open_node(root, null, true);
                         }
                     });
-                    function onJSONDataComplete() {
-                        $('#nav-tree').jstree({
-                            json_data: {
-                                data: json_dataData,
-                                ajax: {
-                                    url: function (node) {
-                                        if (node !== -1) {
-                                            var path = getFullObjectPath(node);
+                    getContainerInfo(function (data) {
+                        var json_dataData = [];
+
+                        data.forEach(function (container, index) {
+                            var count = container.count;
+                            var bytes = container.bytes;
+                            var name = container.name;
+                            json_dataData.push({
+                                data: name,
+                                state: "closed",
+                                attr: {
+                                    id: name,
+                                    rel: "root"
+                                }
+                            });
+                            if (index === data.length - 1) {
+                                return onJSONDataComplete();
+                            }
+                        });
+                        function onJSONDataComplete() {
+                            $('#nav-tree').jstree({
+                                json_data: {
+                                    data: json_dataData,
+                                    ajax: {
+                                        url: function (node) {
+                                            if (node !== -1) {
+                                                var path = getFullObjectPath(node);
+                                                var root = getRootContainer(node);
+                                                var prefix = "";
+                                                if (path != "") {
+                                                    prefix = '&prefix=' + encodeURIComponent(path);
+                                                }
+                                                return appConfig.auth.storageurl + '/' + encodeURIComponent(root) + '?delimiter=/' + prefix + '&format=json';
+                                            }
                                             var root = getRootContainer(node);
-                                            var prefix = "";
-                                            if (path != "") {
-                                                prefix = '&prefix=' + encodeURIComponent(path);
-                                            }
-                                            return appConfig.auth.storageurl + '/' + encodeURIComponent(root) + '?delimiter=/' + prefix + '&format=json';
-                                        }
-                                        var root = getRootContainer(node);
-                                        return appConfig.auth.storageurl + '/' + encodeURIComponent(root);
-                                    },
-                                    success: function (data) {
-                                        var json_dataData = [];
-                                        data.forEach(function (obj, index) {
-                                            var type = "object";
-                                            var state = null;
-                                            var content_type = obj.content_type;
-                                            var name = obj.name;
+                                            return appConfig.auth.storageurl + '/' + encodeURIComponent(root);
+                                        },
+                                        success: function (data) {
+                                            var json_dataData = [];
+                                            data.forEach(function (obj, index) {
+                                                var type = "object";
+                                                var state = null;
+                                                var content_type = obj.content_type;
+                                                var name = obj.name;
 
-                                            if (content_type == "application/directory" ||
-                                                content_type == "text/directory") {
-                                                type = "object-folder";
-                                            }
-
-                                            if (obj.subdir) {
-                                                name = obj.subdir;
-                                                state = "closed";
-                                                type = "folder";
-                                                var n_arry = name.split('/');
-                                                if (n_arry.length >= 2) {
-                                                    name = n_arry[n_arry.length - 2];
+                                                if (content_type == "application/directory" ||
+                                                    content_type == "text/directory") {
+                                                    type = "object-folder";
                                                 }
-                                            } else {
-                                                var n_arry = name.split('/');
-                                                name = n_arry[n_arry.length - 1];
-                                            }
 
-                                            json_dataData.push({
-                                                data: name,
-                                                state: state,
-                                                attr: {
-                                                    id: name,
-                                                    rel: type,
-                                                    title: name
+                                                if (obj.subdir) {
+                                                    name = obj.subdir;
+                                                    state = "closed";
+                                                    type = "folder";
+                                                    var n_arry = name.split('/');
+                                                    if (n_arry.length >= 2) {
+                                                        name = n_arry[n_arry.length - 2];
+                                                    }
+                                                } else {
+                                                    var n_arry = name.split('/');
+                                                    name = n_arry[n_arry.length - 1];
                                                 }
+
+                                                json_dataData.push({
+                                                    data: name,
+                                                    state: state,
+                                                    attr: {
+                                                        id: name,
+                                                        rel: type,
+                                                        title: name
+                                                    }
+                                                });
                                             });
-                                        });
-                                        return json_dataData;
+                                            return json_dataData;
+                                        }
+                                    },
+                                    progressive_render: true
+                                },
+                                types: {
+                                    types: {
+                                        "root": {
+                                            icon: {
+                                                image: 'img/drive_network.png'
+                                            }
+                                        },
+                                        "object-folder": {
+                                            icon: {
+                                                image: 'img/folder.png'
+                                            }
+                                        },
+                                        "folder": {
+                                            icon: {
+                                                image: 'img/folder.png'
+                                            },
+                                            select_node: function () {
+                                                return false;
+                                            }
+                                        },
+                                        "object": {
+                                            icon: {
+                                                image: 'img/page.png'
+                                            }
+                                        }
                                     }
                                 },
-                                progressive_render: true
-                            },
-                            types: {
-                                types: {
-                                    "root": {
-                                        icon: {
-                                            image: 'img/drive_network.png'
+                                contextmenu: {
+                                    items: function (node) {
+                                        var menu = {
+                                            "refresh": {
+                                                icon: 'img/arrow_refresh_small.png',
+                                                label: "Refresh",
+                                                action: function (obj) {
+                                                    jQuery.jstree._reference("#nav-tree").refresh(obj);
+                                                }
+                                            },
+                                            /*"addObject": {
+                                                icon: 'img/page_add.png',
+                                                label: "Add Object",
+                                                action: addObject
+                                            },
+                                            "remObject": {
+                                                icon: 'img/page_delete.png',
+                                                label: 'Remove Object',
+                                                action: deleteObject
+                                            }*/
+                                        };
+                                        var rel = node.attr('rel');
+                                        if (rel != undefined && rel != 'root') {
+                                            delete menu['addObject'];
                                         }
-                                    },
-                                    "object-folder": {
-                                        icon: {
-                                            image: 'img/folder.png'
+                                        if (rel == 'root') {
+                                            delete menu['remObject'];
                                         }
-                                    },
-                                    "folder": {
-                                        icon: {
-                                            image: 'img/folder.png'
-                                        },
-                                        select_node: function () {
-                                            return false;
-                                        }
-                                    },
-                                    "object": {
-                                        icon: {
-                                            image: 'img/page.png'
-                                        }
+                                        return menu;
                                     }
-                                }
-                            },
-                            contextmenu: {
-                                items: function (node) {
-                                    var menu = {
-                                        "addObject": {
-                                            icon: 'img/page_add.png',
-                                            label: "Add Object",
-                                            action: addObject
-                                        },
-                                        "refresh": {
-                                            icon: 'img/arrow_refresh_small.png',
-                                            label: "Refresh",
-                                            action: function (obj) {
-                                                jQuery.jstree._reference("#nav-tree").refresh(obj);
-                                            }
-                                        },
-                                        "remObject": {
-                                            icon: 'img/page_delete.png',
-                                            label: 'Remove Object',
-                                            action: deleteObject
-                                        }
-                                    };
-                                    var rel = node.attr('rel');
-                                    if (rel != undefined && rel != 'root') {
-                                        delete menu['addObject'];
-                                    }
-                                    if (rel == 'root') {
-                                        delete menu['remObject'];
-                                    }
-                                    return menu;
-                                }
-                            },
-                            plugins: [ "themes", "json_data", "types", "ui", "contextmenu" ]
-                        })
-                            .bind("select_node.jstree", treeNodeSelected)
-                            .delegate("a", "click", function (event, data) {
-                                event.preventDefault();
-                            });
-                    }
-                });
+                                },
+                                plugins: [ "themes", "json_data", "types", "ui", "contextmenu" ]
+                            })
+                                .bind("select_node.jstree", that.treeNodeSelected)
+                                .delegate("a", "click", function (event, data) {
+                                    event.preventDefault();
+                                });
+                        }
+                    });
+                }
+            });
+        },
+
+        treeNodeSelected: function (event, data) {
+            console.log("Loading tree node");
+            var pathParts = getObjectTree().get_path(data.rslt.obj, true);
+
+            var mainView = new MainView({container: pathParts[0], path: pathParts});
+            $("#content").append(mainView.render().el);            
+
+            if(this.selected_object_view) {
+                this.selected_object_view.clear();
             }
-        });
-    }
+            this.selected_object_view = mainView;
+        }
 
-    function treeNodeSelected(event, data) {
-        $('#body').html('Loading...');
 
-        var pathParts = getObjectTree().get_path(data.rslt.obj, true);
-
-        var mainView = new MainView();
-        mainView.render(pathParts);
-    }
+    });
+    return BrowserTree;
 
     function getFullObjectPath(node) {
         var path = $.jstree._focused().get_path(node, true).slice(1).join('/');
@@ -226,4 +232,5 @@ define([
             callback(data)
         });
     }
+    //var CmdParser = require('cmdparser');
 });
