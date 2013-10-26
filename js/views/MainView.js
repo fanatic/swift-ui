@@ -10,8 +10,8 @@ define([
     var MainView = Backbone.View.extend({
         initialize: function (args) {
             console.log('Initializing Main View');
-            this.container = args.container;
             this.path = args.path;
+            this.item_type = args.item_type.charAt(0).toUpperCase() + args.item_type.slice(1);
         },
 
         events: {
@@ -47,7 +47,8 @@ define([
             if (! this.$el.hasClass("editing")) {
                 this.$el.addClass("editing");
                 $("td.metadata").each(function(index, td) {
-                    if ($(td).attr("id").substring(0,14) == "X-Object-Meta-") {
+                    meta_prefix = "X-" + this.item_type + "-Meta-";
+                    if ($(td).attr("id").substring(0,meta_prefix.length) == meta_prefix) {
                         var value = $(td).text();
                         $(td).html('<input class="metadata form-control" style="display: inline-block; width: 300px;" type="text" placeholder="' + value + '">' +
                             '<button type="button" class="btn btn-default remove-metadata" title="Remove">' +
@@ -63,7 +64,7 @@ define([
         update_metadata_addpair: function() {
             $("table.table-metadata > tbody:last")
                 .append('<tr class="tobesaved">' + 
-                    '<th>X-Object-Meta-<input class="metadata form-control" style="display: inline-block; width: 300px;" type="text" placeholder="key"></th>' + 
+                    '<th>X-' + this.item_type + '-Meta-<input class="metadata form-control" style="display: inline-block; width: 300px;" type="text" placeholder="key"></th>' + 
                     '<td><input class="metadata form-control" style="display: inline-block; width: 300px;" type="text" placeholder="value">' +
                         '<button type="button" class="btn btn-default remove-metadata" title="Remove">' +
                         '<span class="glyphicon glyphicon-remove"></span>' +
@@ -95,7 +96,7 @@ define([
             $(".table-metadata").find("tr").each(function(index, tr) {
                 var th = $(tr).find("th");
                 var td = $(tr).find("td");
-                if (td.attr("id") && td.attr("id").substring(0,14) == "X-Object-Meta-") {
+                if (td.attr("id") && td.attr("id").substring(0,14) == "X-" + this.item_type + "-Meta-") {
                     var value = td.find("input.metadata");
                     if (value.val() != "") {
                         headers[td.attr("id")] = value.val();
@@ -105,7 +106,7 @@ define([
                 } else if (th.find("input.metadata").length > 0 && th.find("input.metadata").val() != "") {
                     var key = th.find("input.metadata");
                     var value = td.find("input.metadata");
-                    headers["X-Object-Meta-" + key.val()] = value.val();
+                    headers["X-" + this.item_type + "-Meta-" + key.val()] = value.val();
                 }
             });
 
@@ -122,7 +123,7 @@ define([
                     },
                     error:function (xhr, ajaxOptions, thrownError){
                         if(xhr.status==404) {
-                            alert("Object no longer exists");
+                            alert(this.item_type + " no longer exists");
                             that.refresh_tree();
                         } else {
                             console.log(xhr);
@@ -135,7 +136,7 @@ define([
         destroy_item: function () {
             var that = this;
 
-            var result=window.confirm(this.title || 'Delete object ' + that.path.join('/') + '?');
+            var result=window.confirm(this.title || 'Delete ' + this.item_type + ' ' + that.path.join('/') + '?');
             if (result) {
                 $.ajax({
                     type: "DELETE",
@@ -154,7 +155,7 @@ define([
 
         upload_item_show: function() {
             $("#upload-modal").html(_.template(uploadTemplate)({
-                container: this.container
+                container: this.path[0]
             }));
             setProgress(0, 'Waiting for upload.');
             $('#upload-modal').modal('show');
@@ -167,7 +168,7 @@ define([
             var output = [];
 
             for (var i = 0, file; file = files[i]; i++) {
-                url=appConfig.auth.storageurl + "/" + this.container + "/" + file.name;
+                url=appConfig.auth.storageurl + "/" + this.path[0] + "/" + file.name;
 
                 // Create CORS Request
                 var xhr = new XMLHttpRequest();
@@ -235,6 +236,7 @@ define([
                     // Setup Main Template
                     $(that.el).html(_.template(mainTemplate)({
                         name: that.path[that.path.length - 1],
+                        item_type: that.item_type,
                         path: that.path.slice(0, -1),
                         metadata: metadata
                     }));

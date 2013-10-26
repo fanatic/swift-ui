@@ -32,18 +32,27 @@ define([
                         }
                     });
                     getContainerInfo(function (data) {
-                        var json_dataData = [];
+
+                        json_dataData = {
+                            data: appConfig.auth.username.split(':')[0],
+                            state: "open",
+                            attr: {
+                                id: appConfig.auth.username.split(':')[0],
+                                rel: "account"
+                            },
+                            children: []
+                        };
 
                         data.forEach(function (container, index) {
                             var count = container.count;
                             var bytes = container.bytes;
                             var name = container.name;
-                            json_dataData.push({
+                            json_dataData.children.push({
                                 data: name,
                                 state: "closed",
                                 attr: {
                                     id: name,
-                                    rel: "root"
+                                    rel: "container"
                                 }
                             });
                             if (index === data.length - 1) {
@@ -111,7 +120,12 @@ define([
                                 },
                                 types: {
                                     types: {
-                                        "root": {
+                                        "account": {
+                                            icon: {
+                                                image: 'img/application.png'
+                                            }
+                                        },
+                                        "container": {
                                             icon: {
                                                 image: 'img/drive_network.png'
                                             }
@@ -146,6 +160,11 @@ define([
                                                     jQuery.jstree._reference("#nav-tree").refresh(obj);
                                                 }
                                             },
+                                            "addContainer": {
+                                                icon: 'img/drive_add.png',
+                                                label: "Add Container",
+                                                action: addContainer
+                                            },
                                             /*"addObject": {
                                                 icon: 'img/page_add.png',
                                                 label: "Add Object",
@@ -158,10 +177,10 @@ define([
                                             }*/
                                         };
                                         var rel = node.attr('rel');
-                                        if (rel != undefined && rel != 'root') {
-                                            delete menu['addObject'];
+                                        if (rel != undefined && rel != 'account') {
+                                            delete menu['addContainer'];
                                         }
-                                        if (rel == 'root') {
+                                        if (rel == 'account') {
                                             delete menu['remObject'];
                                         }
                                         return menu;
@@ -181,10 +200,11 @@ define([
 
         treeNodeSelected: function (event, data) {
             console.log("Loading tree node");
-            var pathParts = getObjectTree().get_path(data.rslt.obj, true);
-
-            var mainView = new MainView({container: pathParts[0], path: pathParts});
-            $("#content").append(mainView.render().el);            
+            var type = getObjectTree()._get_type(data.rslt.obj);
+            var pathParts = getObjectTree().get_path(data.rslt.obj, true).slice(1);
+            console.log(type, pathParts);
+            var mainView = new MainView({item_type: type, path: pathParts});
+            $("#content").append(mainView.render().el);
 
             if(this.selected_object_view) {
                 this.selected_object_view.clear();
@@ -197,7 +217,7 @@ define([
     return BrowserTree;
 
     function getFullObjectPath(node) {
-        var path = $.jstree._focused().get_path(node, true).slice(1).join('/');
+        var path = $.jstree._focused().get_path(node, true).slice(2).join('/');
         if (path != "") {
             return path + "/";
         } else {
@@ -206,7 +226,7 @@ define([
     }
 
     function getRootContainer(node) {
-        return $.jstree._focused().get_path(node, true).slice(0, 1);
+        return $.jstree._focused().get_path(node, true).slice(1, 2);
     }
 
     function getObjectTree() {
@@ -215,6 +235,11 @@ define([
 
     function refreshTree() {
         getObjectTree().refresh();
+    }
+
+    function addContainer(containerId, path) {
+        var mainView = new MainView();
+        mainView.addObject(path);
     }
 
     function addObject(containerId, path) {
