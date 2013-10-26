@@ -6,15 +6,15 @@
     <li class="active"><%= name %></li>
 </ol>
 <div class="page-header">
-    <h1><% if (item_type == "object") { %>
+    <h1><% if (item_type == "Object") { %>
             <%= name %>
             <% if(metadata.Etag) { %>
             <small title="<%= metadata.Etag %>"><%= metadata.Etag.substring(0,8) %></small>
             <% } %>
-        <% } else if (item_type == "container") { %>
+        <% } else if (item_type == "Container") { %>
             <%= name %>
             <small>Container</small>
-        <% } else { %>
+        <% } else if (item_type == "Account") { %>
             <%- appConfig.auth.username.split(':')[0] %>
             <small>Account</small>
         <% } %>
@@ -29,7 +29,7 @@
                 <button type="button" class="btn btn-default destroy" title="Delete <%- item_type %>">
                     <span class="glyphicon glyphicon-trash"></span>
                 </button>
-                <% if (item_type == "object" || item_type == "container") { %>
+                <% if (item_type == "Object" || item_type == "Container") { %>
                 <button type="button" class="btn btn-default upload" title="Upload New Object">
                     <span class="glyphicon glyphicon-cloud-upload"></span>
                 </button>

@@ -46,9 +46,10 @@ define([
         update_metadata_show: function() {
             if (! this.$el.hasClass("editing")) {
                 this.$el.addClass("editing");
+                var that = this;
                 $("td.metadata").each(function(index, td) {
-                    meta_prefix = "X-" + this.item_type + "-Meta-";
-                    if ($(td).attr("id").substring(0,meta_prefix.length) == meta_prefix) {
+                    meta_prefix = "X-" + that.item_type + "-Meta-";
+                    if ($(td).attr("id") && $(td).attr("id").substring(0,meta_prefix.length) == meta_prefix) {
                         var value = $(td).text();
                         $(td).html('<input class="metadata form-control" style="display: inline-block; width: 300px;" type="text" placeholder="' + value + '">' +
                             '<button type="button" class="btn btn-default remove-metadata" title="Remove">' +
@@ -93,10 +94,12 @@ define([
 
         update_metadata: function() {
             headers = {};
+            var that = this;
             $(".table-metadata").find("tr").each(function(index, tr) {
                 var th = $(tr).find("th");
                 var td = $(tr).find("td");
-                if (td.attr("id") && td.attr("id").substring(0,14) == "X-" + this.item_type + "-Meta-") {
+                meta_prefix = "X-" + that.item_type + "-Meta-";
+                if (td.attr("id") && td.attr("id").substring(0,meta_prefix.length) == meta_prefix) {
                     var value = td.find("input.metadata");
                     if (value.val() != "") {
                         headers[td.attr("id")] = value.val();
@@ -106,7 +109,7 @@ define([
                 } else if (th.find("input.metadata").length > 0 && th.find("input.metadata").val() != "") {
                     var key = th.find("input.metadata");
                     var value = td.find("input.metadata");
-                    headers["X-" + this.item_type + "-Meta-" + key.val()] = value.val();
+                    headers[meta_prefix + key.val()] = value.val();
                 }
             });
 
