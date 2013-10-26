@@ -219,7 +219,6 @@ define([
                     xhr.send(file);
                 }
             }
-            //$.jstree._reference('#nav-tree').refresh();
         },
 
         create_container_show: function() {

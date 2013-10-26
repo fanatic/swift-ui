@@ -8,17 +8,23 @@ define([
 ], function ($, _, Backbone, loginTemplate) {
     var LoginView = Backbone.View.extend({
         el: '#login-entry',
+        logged_in: false,
         initialize: function () {
             console.log('Initializing Login View');
         },
 
         events: {
-            "click #loginButton": "login"
+            "click #loginButton":  "login",
+            "click #logoutButton": "logout"
         },
 
         render: function () {
             //TODO: Remember to add error handling div
-            $(this.el).html(_.template(loginTemplate));
+            $(this.el).html(_.template(loginTemplate, {
+                logged_in: this.logged_in,
+                username: appConfig.auth.username,
+                key: appConfig.auth.key
+            }));
             return this;
         },
 
@@ -27,24 +33,39 @@ define([
             $('.alert-error').hide(); // Hide any errors on a new submit
             var url = appConfig.auth.endpoint;
             console.log('Logging in... ');
+            var that = this;
             $.ajax({
                 url: url,
                 type: 'GET',
-                dataType: "json",
+                dataType: 'text',
                 headers: {
-                    "X-Auth-User": appConfig.auth.username,
-                    "X-Auth-Key": appConfig.auth.key
+                    "X-Auth-User": $("#login-username").val(),
+                    "X-Auth-Key": $("#login-key").val()
                 },
-                complete: function (data) {
-                    console.log(["Login request details: ", data]);
-                    appConfig.auth.token = data.getResponseHeader('X-Storage-Token');
-                    appConfig.auth.storageurl = data.getResponseHeader('X-Storage-Url');
+                success: function (data, status, xhr) {
+                    console.log(["Login request details: ", xhr]);
+                    appConfig.auth.token = xhr.getResponseHeader('X-Storage-Token');
+                    appConfig.auth.storageurl = xhr.getResponseHeader('X-Storage-Url');
                     console.log(appConfig.auth.token);
                     console.log(appConfig.auth.storageurl);
-                    //window.Vent.trigger('login-successful', appConfig.auth.storageurl);
-                    window.location.href = "#browser";
+                    that.logged_in = true;
+                    that.render();
+                    window.Vent.trigger('login-successful', appConfig.auth.storageurl);
+                },
+                error: function (xhr, status, error)  {
+                    console.log(status, error);
+                    $("#login-username").parent().addClass("has-error");
+                    $("#login-key").parent().addClass("has-error");
+                    return false;
                 }
             });
+        },
+
+        logout: function (event) {
+            appConfig.auth.token = null;
+            appConfig.auth.storageurl = null;
+            Backbone.history.navigate("/", true);
+            window.location.reload(true);
         }
     });
     return LoginView;

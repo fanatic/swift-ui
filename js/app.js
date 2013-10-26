@@ -14,14 +14,14 @@ define([
             'browser': 'browser',
             'accounts': 'accounts',
             'users': 'accounts',
-            '*actions': 'main'
+            '*actions': 'browser'
         }
     });
 
     var initialize = function () {
         var router = new MainRouter();
 
-        $.ajaxSetup({
+        /*$.ajaxSetup({
             statusCode: {
                 401: function () {
                     // Redirect to the login page.
@@ -32,7 +32,7 @@ define([
                     router.navigate("browser#denied", true)
                 }
             }
-        });
+        });*/
 
         $(document).ajaxSend(function (e, xhr, options) {
             xhr.setRequestHeader("X-Auth-Token", appConfig.auth.token);
@@ -57,25 +57,15 @@ define([
          });
          });*/
 
-        /* window.Vent = {};
-         _.extend(window.Vent, Backbone.Events);
-         window.Vent.on('login-successful', this.redirect_to_browser, this);
-         function redirect_to_browser(obj) {
-         router.navigate('browser', true);
-         } */
+        window.Vent = {};
+        _.extend(window.Vent, Backbone.Events);
+        window.Vent.on('login-successful', function (obj) {
+                var browserTreeView = new BrowserTreeView();
+                browserTreeView.render();
+            }, this);
+        
 
         console.log("App / initialize");
-
-        router.on('route:main', function (actions) {
-            console.log("Loading Login");
-            if (!appConfig.auth.token) {
-                var loginView = new LoginView();
-                loginView.render();
-
-                //TODO: Stop clicking automatically
-                $('#loginButton').click();
-            }
-        });
 
         router.on('route:browser', function (actions) {
             console.log("Loading Browser");
@@ -83,11 +73,11 @@ define([
                 var loginView = new LoginView();
                 loginView.render();
                 //TODO: Stop clicking automatically
-                $('#loginButton').click();
+                //$('#loginButton').click();
+            } else {
+                var browserTreeView = new BrowserTreeView();
+                browserTreeView.render();
             }
-
-            var browserTreeView = new BrowserTreeView();
-            browserTreeView.render();
         });
 
         Backbone.history.start();
