@@ -5,8 +5,9 @@ define([
     'underscore',
     'backbone',
     'text!templates/main.html',
-    'text!templates/upload.html'
-], function ($, _, Backbone, mainTemplate, uploadTemplate) {
+    'text!templates/upload.html',
+    'text!templates/create.html'
+], function ($, _, Backbone, mainTemplate, uploadTemplate, createTemplate) {
     var MainView = Backbone.View.extend({
         initialize: function (args) {
             console.log('Initializing Main View');
@@ -23,7 +24,8 @@ define([
             "click  .destroy"         : "destroy_item",
             "click  .upload"          : "upload_item_show",
             "change #files"           : "upload_item",
-            "click  .btn-close"       : "refresh_tree",
+            "click  .create-container": "create_container_show",
+            "click  .create-save"     : "create",
         },
 
         download_item: function () {
@@ -113,27 +115,25 @@ define([
                 }
             });
 
-            if (Object.keys(headers).length > 0) {
-                console.log("Saving", headers);
-                var that = this;
-                $.ajax({
-                    type: 'POST',
-                    url: appConfig.auth.storageurl + '/' + that.path.join('/'),
-                    headers: headers,
-                    success: function (data, status, response) {
-                        that.$el.removeClass("editing");
+            console.log("Saving", headers);
+            var that = this;
+            $.ajax({
+                type: 'POST',
+                url: appConfig.auth.storageurl + '/' + that.path.join('/'),
+                headers: headers,
+                success: function (data, status, response) {
+                    that.$el.removeClass("editing");
+                    that.refresh_tree();
+                },
+                error:function (xhr, ajaxOptions, thrownError){
+                    if(xhr.status==404) {
+                        alert(this.item_type + " no longer exists");
                         that.refresh_tree();
-                    },
-                    error:function (xhr, ajaxOptions, thrownError){
-                        if(xhr.status==404) {
-                            alert(this.item_type + " no longer exists");
-                            that.refresh_tree();
-                        } else {
-                            console.log(xhr);
-                        }
+                    } else {
+                        console.log(xhr);
                     }
-                });
-            }            
+                }
+            });
         },
 
         destroy_item: function () {
@@ -158,10 +158,14 @@ define([
 
         upload_item_show: function() {
             $("#upload-modal").html(_.template(uploadTemplate)({
-                container: this.path[0]
+                container: this.path[0],
             }));
             setProgress(0, 'Waiting for upload.');
             $('#upload-modal').modal('show');
+            var that = this;
+            $('#upload-modal').on('hidden.bs.modal', function () {
+              that.refresh_tree();
+            });
         },
 
         upload_item: function(event) {
@@ -171,7 +175,11 @@ define([
             var output = [];
 
             for (var i = 0, file; file = files[i]; i++) {
-                url=appConfig.auth.storageurl + "/" + this.path[0] + "/" + file.name;
+                path = this.path.join("/")
+                if (this.path.length > 1) {
+                    path = this.path.slice(0,-1).join("/")
+                }
+                url=appConfig.auth.storageurl + "/" + path + "/" + file.name;
 
                 // Create CORS Request
                 var xhr = new XMLHttpRequest();
@@ -214,6 +222,49 @@ define([
             //$.jstree._reference('#nav-tree').refresh();
         },
 
+        create_container_show: function() {
+            $("#create-modal").html(_.template(createTemplate)({
+                item_type: 'Container'
+            }));
+            $('#create-modal').modal('show');
+        },
+
+        create: function(event) {
+            var name = $("#create-name").val();
+            var type = $(event.target).val();
+            console.log(name, type);
+            if(type == "Container") {
+                $.ajax({
+                    type: 'PUT',
+                    url: appConfig.auth.storageurl + '/' + name,
+                    success: function (data, status, response) {
+                        $('#create-modal').on('hidden.bs.modal', function () {
+                          $.jstree._reference('#nav-tree').refresh();
+                        });
+                        $('#create-modal').modal('hide');
+                    }
+                });
+            } else if (type == "Folder") {
+                path = this.path.join("/")
+                if (this.path.length > 1) {
+                    path = this.path.slice(0,-1).join("/")
+                }
+                $.ajax({
+                    type: 'PUT',
+                    url: appConfig.auth.storageurl + "/" + path + "/" + name,
+                    headers: {
+                        "Content-Type": "application/directory"
+                    },
+                    success: function (data, status, response) {
+                        $('#create-modal').on('hidden.bs.modal', function () {
+                          $.jstree._reference('#nav-tree').refresh();
+                        });
+                        $('#create-modal').modal('hide');
+                    }
+                });
+            }
+        },
+
         render: function () {
             $(this.el).html('Loading ' + this.path.join('/') + '...');
 
@@ -254,10 +305,7 @@ define([
         },
 
         refresh_tree: function() {
-            // Timeout hack is here to allow the upload modal animation to finish
-            setTimeout(function() {
-                $.jstree._reference('#nav-tree').refresh();
-                }, 750);
+            $.jstree._reference('#nav-tree').refresh();
         }
     });
     return MainView;

@@ -34,6 +34,12 @@
                     <span class="glyphicon glyphicon-cloud-upload"></span>
                 </button>
                 <% } %>
+                <% if (item_type == "Account" || item_type == "Container") { %>
+                <button type="button" class="btn btn-default create-container" title="Create New Container">
+                    <span class="glyphicon glyphicon-hdd"></span>
+                </button>
+                <% } %>
+
             </div>
         </div>
     </h1>
@@ -51,3 +57,4 @@
 </table>
 
 <div class="modal fade" id="upload-modal" tabindex="-1" role="dialog" aria-labelledby="upload-modal" aria-hidden="true"></div>
+<div class="modal fade" id="create-modal" tabindex="-1" role="dialog" aria-labelledby="create-modal" aria-hidden="true"></div>

@@ -202,7 +202,6 @@ define([
             console.log("Loading tree node");
             var type = getObjectTree()._get_type(data.rslt.obj);
             var pathParts = getObjectTree().get_path(data.rslt.obj, true).slice(1);
-            console.log(type, pathParts);
             var mainView = new MainView({item_type: type, path: pathParts});
             $("#content").append(mainView.render().el);
 
