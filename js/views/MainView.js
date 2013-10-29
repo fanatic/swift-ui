@@ -25,6 +25,7 @@ define([
             "click  .upload"          : "upload_item_show",
             "change #files"           : "upload_item",
             "click  .create-container": "create_container_show",
+            "click  .create-folder"   : "create_folder_show",
             "click  .create-save"     : "create",
         },
 
@@ -176,7 +177,7 @@ define([
 
             for (var i = 0, file; file = files[i]; i++) {
                 path = this.path.join("/")
-                if (this.path.length > 1) {
+                if (this.path.length > 1 && this.item_type != 'Folder') {
                     path = this.path.slice(0,-1).join("/")
                 }
                 url=appConfig.auth.storageurl + "/" + path + "/" + file.name;
@@ -228,6 +229,13 @@ define([
             $('#create-modal').modal('show');
         },
 
+        create_folder_show: function() {
+            $("#create-modal").html(_.template(createTemplate)({
+                item_type: 'Folder'
+            }));
+            $('#create-modal').modal('show');
+        },
+
         create: function(event) {
             var name = $("#create-name").val();
             var type = $(event.target).val();
@@ -245,7 +253,7 @@ define([
                 });
             } else if (type == "Folder") {
                 path = this.path.join("/")
-                if (this.path.length > 1) {
+                if (this.path.length > 1 && this.item_type != 'Folder') {
                     path = this.path.slice(0,-1).join("/")
                 }
                 $.ajax({

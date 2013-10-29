@@ -81,23 +81,39 @@ define([
                                             var json_dataData = [];
                                             data.forEach(function (obj, index) {
                                                 var type = "object";
-                                                var state = null;
+                                                var state = undefined;
                                                 var content_type = obj.content_type;
                                                 var name = obj.name;
 
                                                 if (content_type == "application/directory" ||
                                                     content_type == "text/directory") {
-                                                    type = "object-folder";
+                                                    // Find a "subdir" that matches this directory object, and combine them
+                                                    counterpart = _.find(json_dataData, function(o){ console.log(o.attr.id); return o.attr.id == name; });
+                                                    if (counterpart) {
+                                                        counterpart.type = "folder";
+                                                        return;
+                                                    } else {
+                                                        type = "folder";
+                                                    }                                                    
                                                 }
 
                                                 if (obj.subdir) {
                                                     name = obj.subdir;
-                                                    state = "closed";
-                                                    type = "folder";
                                                     var n_arry = name.split('/');
                                                     if (n_arry.length >= 2) {
                                                         name = n_arry[n_arry.length - 2];
                                                     }
+
+                                                    // Find a directory object that matches this "subdir", and combine them
+                                                    counterpart = _.find(json_dataData, function(o){ console.log(o.attr.id); return o.attr.id == name; });
+                                                    if (counterpart) {
+                                                        counterpart.state = "closed";
+                                                        return;
+                                                    } else {
+                                                        state = "closed";
+                                                        type = "fakefolder";
+                                                    }
+
                                                 } else {
                                                     var n_arry = name.split('/');
                                                     name = n_arry[n_arry.length - 1];
@@ -130,12 +146,12 @@ define([
                                                 image: 'img/drive_network.png'
                                             }
                                         },
-                                        "object-folder": {
+                                        "folder": {
                                             icon: {
                                                 image: 'img/folder.png'
                                             }
                                         },
-                                        "folder": {
+                                        "fakefolder": {
                                             icon: {
                                                 image: 'img/folder.png'
                                             },

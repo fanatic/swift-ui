@@ -11,6 +11,9 @@
             <% if(metadata.Etag) { %>
             <small title="<%= metadata.Etag %>"><%= metadata.Etag.substring(0,8) %></small>
             <% } %>
+        <% } else if (item_type == "Folder") { %>
+            <%= name %>
+            <small>Folder</small>
         <% } else if (item_type == "Container") { %>
             <%= name %>
             <small>Container</small>
@@ -29,9 +32,12 @@
                 <button type="button" class="btn btn-default destroy" title="Delete <%- item_type %>">
                     <span class="glyphicon glyphicon-trash"></span>
                 </button>
-                <% if (item_type == "Object" || item_type == "Container") { %>
+                <% if (item_type != "Account") { %>
                 <button type="button" class="btn btn-default upload" title="Upload New Object">
                     <span class="glyphicon glyphicon-cloud-upload"></span>
+                </button>
+                <button type="button" class="btn btn-default create-folder" title="Create New Folder">
+                    <span class="glyphicon glyphicon-folder-close"></span>
                 </button>
                 <% } %>
                 <% if (item_type == "Account" || item_type == "Container") { %>
@@ -39,7 +45,6 @@
                     <span class="glyphicon glyphicon-hdd"></span>
                 </button>
                 <% } %>
-
             </div>
         </div>
     </h1>
