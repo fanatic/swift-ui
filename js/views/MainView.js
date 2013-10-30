@@ -10,7 +10,6 @@ define([
 ], function ($, _, Backbone, mainTemplate, uploadTemplate, createTemplate) {
     var MainView = Backbone.View.extend({
         initialize: function (args) {
-            console.log('Initializing Main View');
             this.path = args.path;
             this.item_type = args.item_type.charAt(0).toUpperCase() + args.item_type.slice(1);
         },

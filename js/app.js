@@ -21,49 +21,32 @@ define([
     var initialize = function () {
         var router = new MainRouter();
 
-        /*$.ajaxSetup({
+        // Display login form if the token becomes invalidated
+        $.ajaxSetup({
             statusCode: {
                 401: function () {
                     // Redirect to the login page.
-                    router.navigate("browser", true)
+                    $('#logoutButton').click();
                 },
                 403: function () {
                     // 403 -- Access denied
-                    router.navigate("browser#denied", true)
+                    $('#logoutButton').click();
                 }
             }
-        });*/
+        });
 
+        // Send token with every ajax request!
         $(document).ajaxSend(function (e, xhr, options) {
             xhr.setRequestHeader("X-Auth-Token", appConfig.auth.token);
         });
 
-        /*loadConfig(function () {
-         loadCommandLine();
-         setupResizeEvents();
-         setupCommandLock();
-         setupCLIKeyEvents();
-         $('.container').removeClass('container');
-         $('html').css('overflow-y', 'hidden');
-         $('#pageIndex').live('keydown', function (e) {
-         if (e.keyCode == 13) {
-         $('#gotoIndexButton').click();
-         }
-         });
-         $('#redisCommandsModal').modal({
-         backdrop: false,
-         keyboard: false,
-         show: false
-         });
-         });*/
-
+        // Setup event listeners
         window.Vent = {};
         _.extend(window.Vent, Backbone.Events);
         window.Vent.on('login-successful', function (obj) {
                 var browserTreeView = new BrowserTreeView();
                 browserTreeView.render();
             }, this);
-        
 
         console.log("App / initialize");
 
@@ -72,7 +55,7 @@ define([
             if (!appConfig.auth.token) {
                 var loginView = new LoginView();
                 loginView.render();
-                //TODO: Stop clicking automatically
+                // Uncomment to login automatically (helps debugging)
                 //$('#loginButton').click();
             } else {
                 var browserTreeView = new BrowserTreeView();

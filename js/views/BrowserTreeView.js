@@ -10,10 +10,6 @@ define([
     var BrowserTree = Backbone.View.extend({
         el: '#browser-tree',
 
-        initialize: function () {
-            console.log('Initializing Browser Tree View');
-        },
-
         render: function () {
             $(this.el).html(_.template(browserTreeTemplate));
             this.loadTree();
@@ -32,7 +28,6 @@ define([
                         }
                     });
                     getContainerInfo(function (data) {
-
                         json_dataData = {
                             data: appConfig.auth.username.split(':')[0],
                             state: "open",
@@ -176,12 +171,12 @@ define([
                                                     jQuery.jstree._reference("#nav-tree").refresh(obj);
                                                 }
                                             },
-                                            "addContainer": {
+                                            /*"addContainer": {
                                                 icon: 'img/drive_add.png',
                                                 label: "Add Container",
                                                 action: addContainer
                                             },
-                                            /*"addObject": {
+                                            "addObject": {
                                                 icon: 'img/page_add.png',
                                                 label: "Add Object",
                                                 action: addObject
@@ -250,21 +245,6 @@ define([
 
     function refreshTree() {
         getObjectTree().refresh();
-    }
-
-    function addContainer(containerId, path) {
-        var mainView = new MainView();
-        mainView.addObject(path);
-    }
-
-    function addObject(containerId, path) {
-        var mainView = new MainView();
-        mainView.addObject(path);
-    }
-
-    function deleteObject(containerId, path) {
-        var mainView = new MainView();
-        mainView.deleteObject(path);
     }
 
     function getContainerInfo(callback) {

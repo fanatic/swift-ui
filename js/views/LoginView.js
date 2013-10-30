@@ -9,9 +9,6 @@ define([
     var LoginView = Backbone.View.extend({
         el: '#login-entry',
         logged_in: false,
-        initialize: function () {
-            console.log('Initializing Login View');
-        },
 
         events: {
             "click #loginButton":  "login",
@@ -29,7 +26,6 @@ define([
         },
 
         login: function (event) {
-            event.preventDefault(); // Don't let this button submit the form
             $('.alert-error').hide(); // Hide any errors on a new submit
             var url = appConfig.auth.endpoint;
             console.log('Logging in... ');
@@ -43,11 +39,11 @@ define([
                     "X-Auth-Key": $("#login-key").val()
                 },
                 success: function (data, status, xhr) {
-                    console.log(["Login request details: ", xhr]);
                     appConfig.auth.token = xhr.getResponseHeader('X-Storage-Token');
                     appConfig.auth.storageurl = xhr.getResponseHeader('X-Storage-Url');
-                    console.log(appConfig.auth.token);
-                    console.log(appConfig.auth.storageurl);
+                    console.log("Login request details: ",
+                                appConfig.auth.token,
+                                appConfig.auth.storageurl);
                     that.logged_in = true;
                     that.render();
                     window.Vent.trigger('login-successful', appConfig.auth.storageurl);
