@@ -55,6 +55,7 @@ define([
                     return false;
                 }
             });
+            return false;
         },
 
         logout: function (event) {
