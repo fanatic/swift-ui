@@ -27,4 +27,4 @@ Potential Improvements:
 - Container & Object ACLs
 
 
-![Screenshot](https://github.com/fanatic/swift-ui/raw/backbone/img/screenshot.png)
+![Screenshot](https://github.com/fanatic/swift-ui/raw/master/img/screenshot.png)
