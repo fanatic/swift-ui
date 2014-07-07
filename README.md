@@ -38,7 +38,7 @@ Ensure [staticweb is enabled](http://docs.openstack.org/api/openstack-object-sto
 1.  `cd swift-ui`
 1.  `vi js/config.js # modify to match your auth url, username, and key`
 1.  `swift upload swift-ui *`
-1.  `wift post -r '.r:*' swift-ui`
+1.  `swift post -r '.r:*' swift-ui`
 1.  `swift post -m 'web-index:index.html' swift-ui`
 1.  Visit `http://192.168.2.77:8080/v1/AUTH_test/swift-ui/` 
     (where `http://192.168.2.77:8080/v1/AUTH_test` is my storage url for my test account)
