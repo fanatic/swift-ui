@@ -5,6 +5,7 @@ require.config({
         // Major libraries
         jquery: 'libs/jquery',
         jstree: 'libs/jstree/jquery.jstree',
+        mockjax: 'libs/jquery.mockjax',
         bootstrap: 'libs/bootstrap',
         underscore: 'libs/underscore', // https://github.com/amdjs
         backbone: 'libs/backbone', // https://github.com/amdjs
@@ -17,6 +18,9 @@ require.config({
         },
         'jstree': {
             deps: ['jquery']
+        },
+        'mockjax': {
+            deps: ['jquery']
         }
     }
 });
@@ -24,7 +28,12 @@ require.config({
 // Let's kick off the application
 
 require([
-    'app'
-], function (App) {
+    'app',
+    'mocks'
+], function (App, Mock) {
+    if (appConfig.auth.endpoint == 'http://example.com:8080/auth/v1.0') {
+        Mock.initialize();
+    }
+
     App.initialize();
 });

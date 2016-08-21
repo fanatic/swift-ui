@@ -1,9 +1,15 @@
 language: node_js
 node_js:
-  - "0.10"
-  
+  - '4'
 before_script:
-  - /bin/env
-  - /bin/ps auxf
+  - env
+  - ps auxf
   - hostname
   - uname -a
+  - npm install -g protractor
+script: e2e/run.sh
+addons:
+  sauce_connect:
+    username: "fanatic"
+    access_key:
+      secure: Yhe4v48+JYDcaByL3/ZZf2qUbCYx9p1WjNa6nR6lW3Q7BJbLFERzyvTMoLyGfDRHNlnLE3cRfZM6NHNmAb8s8idtzilnC+RYEGLLi2KlGz2p6Xp9fKg0rkhIMGbuwQ4Z0pQMHeuYYCEp69/HKocQcaqiYtCtiLz4UTft+Tq0VQI=
