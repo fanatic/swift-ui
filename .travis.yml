@@ -8,3 +8,4 @@ before_script:
   - hostname
   - uname -a
   - npm install -g protractor
+script: true
