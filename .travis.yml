@@ -8,4 +8,6 @@ before_script:
   - hostname
   - uname -a
   - npm install -g protractor
-script: true
+script:
+  - echo 'hello world'
+  - true
