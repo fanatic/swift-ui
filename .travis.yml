@@ -9,5 +9,5 @@ before_script:
   - uname -a
   - npm install -g protractor
 script:
-  - echo 'hello world'
+  - echo 'hello world again'
   - true
